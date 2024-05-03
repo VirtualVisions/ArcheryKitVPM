@@ -1,0 +1,23 @@
+{
+    "name": "Vowgan.ArcheryKitEditor",
+    "rootNamespace": "",
+    "references": [
+        "UdonSharp.Runtime",
+        "VRC.Udon",
+        "UdonSharp.Editor",
+        "VRC.Udon.Editor",
+        "Vowgan.ArcheryKit.Runtime",
+        "Vowgan.ContactAudio.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

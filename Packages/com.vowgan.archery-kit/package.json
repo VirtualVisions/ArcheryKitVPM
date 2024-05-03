@@ -1,0 +1,12 @@
+{
+  "name": "com.vowgan.archery-kit",
+  "displayName": "Archery Kit",
+  "version": "0.0.1",
+  "unity": "2022.3",
+  "description": "VRChat Archery Kit for VRC Worlds.",
+  "vrchatVersion": "2022.1.1",
+  "author": {
+    "name": "Vowgan",
+    "email": "VowganVR@Gmail.com"
+  }
+}
