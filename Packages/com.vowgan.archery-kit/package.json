@@ -9,7 +9,6 @@
     "email": "VowganVR@Gmail.com"
   },
   "vpmDependencies": {
-    "com.vrchat.worlds": "^3.5",
-    "com.vowgan.contact-audio": "^1.0"
+    "com.vrchat.worlds": "^3.5"
   }
 }
