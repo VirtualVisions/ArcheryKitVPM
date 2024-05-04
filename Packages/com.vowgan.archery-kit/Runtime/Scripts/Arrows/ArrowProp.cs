@@ -28,8 +28,8 @@ namespace Vowgan.ArcheryKit
         [Header("References")] 
         [HideInInspector] public ContactAudioPlayer AudioPlayer;
         [HideInInspector] public ArrowTargetBase CollidedTarget;
-
-        [SerializeField] private ArrowPool Pool;
+        [HideInInspector] public ArrowPool Pool;
+        
         [SerializeField] private GameObject Visual;
         [SerializeField] private TrailRenderer Trail;
         [SerializeField] private AudioClip ClipShoot;

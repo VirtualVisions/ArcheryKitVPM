@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 using Vowgan.Contact;
@@ -12,6 +13,23 @@ namespace Vowgan.ArcheryKit
         [PostProcessScene(-100)]
         public static void PostProcessScene()
         {
+            ArrowPool[] pools = FindObjectsByType<ArrowPool>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (ArrowPool pool in pools)
+            {
+                List<ArrowProp> arrows = new();
+                for (int i = 0; i < pool.ArrowCount; i++)
+                {
+                    GameObject arrow = (GameObject)PrefabUtility.InstantiatePrefab(pool.ArrowPrefab, pool.transform);
+                    arrow.name = $"Arrow {i}";
+
+                    ArrowProp arrowProp = arrow.GetComponent<ArrowProp>();
+                    arrowProp.Pool = pool;
+                    arrows.Add(arrowProp);
+                }
+                
+                pool.Arrows = arrows.ToArray();
+            }
+            
             ContactAudioPlayer audioPlayer = FindObjectOfType<ContactAudioPlayer>();
             if (audioPlayer)
             {
@@ -23,8 +41,8 @@ namespace Vowgan.ArcheryKit
 
                 TimeTrial timeTrial = FindObjectOfType<TimeTrial>();
                 if (timeTrial) timeTrial.AudioPlayer = audioPlayer;
-
             }
+
         }
         
     }

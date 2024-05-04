@@ -14,7 +14,9 @@ namespace Vowgan.ArcheryKit
     public class ArrowPool : UdonSharpBehaviour
     {
 
-        [SerializeField] private ArrowProp[] Arrows;
+        public GameObject ArrowPrefab;
+        public int ArrowCount = 10;
+        public ArrowProp[] Arrows;
         public float ArrowGravity = 5;
 
         private DataList freeArrows;
