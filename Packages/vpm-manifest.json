@@ -1,34 +1,34 @@
 {
   "dependencies": {
-    "com.vrchat.worlds": {
-      "version": "3.6.0-beta.1"
-    },
     "com.vowgan.contact-audio": {
-      "version": "3.3.3"
+      "version": "3.3.4"
+    },
+    "com.vrchat.worlds": {
+      "version": "3.6.1"
     },
     "com.vrchat.core.vpm-resolver": {
-      "version": "0.1.28"
+      "version": "0.1.29"
     }
   },
   "locked": {
-    "com.vrchat.worlds": {
-      "version": "3.6.0-beta.1",
-      "dependencies": {
-        "com.vrchat.base": "3.6.0-beta.1"
-      }
-    },
-    "com.vrchat.base": {
-      "version": "3.6.0-beta.1",
-      "dependencies": {}
-    },
     "com.vowgan.contact-audio": {
-      "version": "3.3.3",
+      "version": "3.3.4",
       "dependencies": {
         "com.vrchat.worlds": "^3.5"
       }
     },
+    "com.vrchat.worlds": {
+      "version": "3.6.1",
+      "dependencies": {
+        "com.vrchat.base": "3.6.1"
+      }
+    },
+    "com.vrchat.base": {
+      "version": "3.6.1",
+      "dependencies": {}
+    },
     "com.vrchat.core.vpm-resolver": {
-      "version": "0.1.28",
+      "version": "0.1.29",
       "dependencies": {}
     }
   }
