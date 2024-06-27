@@ -27,7 +27,6 @@ namespace Vowgan.ArcheryKit
         
         [Header("References")] 
         [HideInInspector] public ContactAudioPlayer AudioPlayer;
-        [HideInInspector] public ArrowTargetBase CollidedTarget;
         [HideInInspector] public ArrowPool Pool;
         
         [SerializeField] private GameObject Visual;
@@ -72,7 +71,7 @@ namespace Vowgan.ArcheryKit
             if (Active)
             {
                 Launched = true;
-                ClearTarget();
+                // ClearTarget();
                 transform.position = StartPosition;
                 transform.forward = StartVelocity.normalized;
 
@@ -145,14 +144,6 @@ namespace Vowgan.ArcheryKit
 
             return newPosition;
         }
-
-        private void ClearTarget()
-        {
-            if (!CollidedTarget) return;
-            
-            CollidedTarget._RemoveContainedArrow(this);
-            CollidedTarget = null;
-        }
         
         public void _Launch(Vector3 position, Vector3 velocity)
         {
@@ -176,7 +167,6 @@ namespace Vowgan.ArcheryKit
         {
             Active = false;
             Pool._Return(this);
-            ClearTarget();
             RequestSerialization();
             ReceiveNetworking();
         }

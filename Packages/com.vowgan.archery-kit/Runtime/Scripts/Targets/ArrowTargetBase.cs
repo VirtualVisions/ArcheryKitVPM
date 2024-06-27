@@ -10,7 +10,6 @@ namespace Vowgan.ArcheryKit
     [UdonBehaviourSyncMode(BehaviourSyncMode.None)]
     public abstract class ArrowTargetBase : UdonSharpBehaviour
     {
-
         [HideInInspector] public ContactAudioPlayer AudioPlayer;
 
         protected VRCPlayerApi localPlayer;
@@ -49,16 +48,7 @@ namespace Vowgan.ArcheryKit
         /// </summary>
         protected virtual void _OnHit(ArrowProp arrow)
         {
-            arrow.CollidedTarget = this;
             arrows.Add(arrow);
-        }
-
-        /// <summary>
-        /// Remove an arrow from the list of currently collided arrows.
-        /// </summary>
-        public virtual void _RemoveContainedArrow(ArrowProp arrow)
-        {
-            arrows.Remove(arrow);
         }
 
         /// <summary>
@@ -66,10 +56,15 @@ namespace Vowgan.ArcheryKit
         /// </summary>
         public virtual void _Clear()
         {
-            for (int i = 0; i < arrows.Count; i++)
+            DataList currentArrows = arrows.ShallowClone();
+
+            for (int i = 0; i < currentArrows.Count; i++)
             {
-                ArrowProp arrow = (ArrowProp)arrows[i].Reference;
-                if (localPlayer.IsOwner(arrow.gameObject)) arrow._Clear();
+                ArrowProp arrow = (ArrowProp)currentArrows[i].Reference;
+                if (localPlayer.IsOwner(arrow.gameObject))
+                {
+                    arrow._Clear();
+                }
             }
 
             arrows.Clear();
