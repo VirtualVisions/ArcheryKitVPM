@@ -64,13 +64,13 @@ namespace Vowgan.ArcheryKit
                 return arrow;
             }
         }
-
+        
         /// <summary>
         /// Return an arrow into the pool of free arrows.
+        /// If inheriting from ArrowProp, you must cast it as ArrowProp before passing it into this function to avoid some U# nulling issues.
         /// </summary>
         public void _Return(ArrowProp arrow)
         {
-            if (arrow == null || !activeArrows.Contains(arrow)) return;
             activeArrows.Remove(arrow);
             freeArrows.Add(arrow);
         }
