@@ -188,7 +188,7 @@ namespace Vowgan.ArcheryKit
         public virtual void _Clear()
         {
             Active = false;
-            Pool._Return(this);
+            Pool._Return((ArrowProp)this);
             RequestSerialization();
             ReceiveNetworking();
         }
