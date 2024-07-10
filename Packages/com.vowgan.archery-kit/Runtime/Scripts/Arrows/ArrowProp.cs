@@ -45,8 +45,10 @@ namespace Vowgan.ArcheryKit
             ReceiveNetworking();
         }
 
+        
         public override void OnOwnershipTransferred(VRCPlayerApi player)
         {
+            // This is to ensure only the owner can Clear the arrow via clicking on it.
             DisableInteractive = !player.isLocal;
         }
 
@@ -70,27 +72,33 @@ namespace Vowgan.ArcheryKit
 
             if (Active)
             {
-                Launched = true;
-                // ClearTarget();
-                transform.position = StartPosition;
-                transform.forward = StartVelocity.normalized;
-
-                if (startTime == Time.realtimeSinceStartup)
+                if (Launched)
                 {
-                    CalculateArc(0);
+                    
                 }
                 else
                 {
-                    SimulateFromSendTime();
+                    Launched = true;
+                    // ClearTarget();
+                    transform.position = StartPosition;
+                    transform.forward = StartVelocity.normalized;
+
+                    if (startTime == Time.realtimeSinceStartup)
+                    {
+                        CalculateArc(0);
+                    }
+                    else
+                    {
+                        SimulateFromSendTime();
+                    }
+                    _OnLaunched();
                 }
-
-                AudioPlayer._PlaySoundChilded(ClipShoot, transform, transform.position, SoundRange, 1,
-                    UnityEngine.Random.Range(0.97f, 1.03f));
-
-                Trail.Clear();
             }
         }
 
+        /// <summary>
+        /// Pre-simulate the arc if calculations are to be time-accurate.
+        /// </summary>
         private void SimulateFromSendTime()
         {
             int iterations = Mathf.FloorToInt(Time.realtimeSinceStartup - startTime);
@@ -100,22 +108,25 @@ namespace Vowgan.ArcheryKit
             }
         }
 
-        private void FixedUpdate()
-        {
-            if (Launched) CalculateArc(Time.realtimeSinceStartup - startTime);
-        }
-
-        public override void Interact()
-        {
-            _Clear();
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if (!Utilities.IsValid(other)) return;
             _Stop();
         }
 
+        private void FixedUpdate()
+        {
+            if (Launched) CalculateArc(Time.realtimeSinceStartup - startTime);
+        }
+
+        public override void Interact() => _Clear();
+
+        /// <summary>
+        /// Calculate where the arrow is supposed to be on this frame and place at correct location.
+        /// </summary>
+        /// <param name="timeSinceStart">Total elapsed time since the starting point of the arc.</param>
+        /// <param name="lineCast">Whether or not to use a linecast between current and next positions to check if it should stop.</param>
+        /// <returns></returns>
         private Vector3 CalculateArc(float timeSinceStart, bool lineCast = false)
         {
             if (timeSinceStart >= FlightTimeout)
@@ -145,7 +156,12 @@ namespace Vowgan.ArcheryKit
             return newPosition;
         }
         
-        public void _Launch(Vector3 position, Vector3 velocity)
+        /// <summary>
+        /// Launch the arrow at a specific position at a specific velocity.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="velocity"></param>
+        public virtual void _Launch(Vector3 position, Vector3 velocity)
         {
             Active = true;
             StartPosition = position;
@@ -157,18 +173,43 @@ namespace Vowgan.ArcheryKit
             ReceiveNetworking();
         }
         
-        public void _Stop()
+        /// <summary>
+        /// Stop the arrow at it's current position, locking it in space.
+        /// </summary>
+        public virtual void _Stop()
         {
             Launched = false;
-            AudioPlayer._PlaySound(ClipHit, transform.position, SoundRange);
+            _OnStopped();
         }
         
-        public void _Clear()
+        /// <summary>
+        /// Fully removes the arrow.
+        /// </summary>
+        public virtual void _Clear()
         {
             Active = false;
             Pool._Return(this);
             RequestSerialization();
             ReceiveNetworking();
+        }
+
+        /// <summary>
+        /// Fired after the arrow begins launching.
+        /// </summary>
+        protected virtual void _OnLaunched()
+        {
+            AudioPlayer._PlaySoundChilded(ClipShoot, transform, transform.position, SoundRange, 1,
+                UnityEngine.Random.Range(0.97f, 1.03f));
+
+            Trail.Clear();
+        }
+
+        /// <summary>
+        /// Fired after the arrow has been stopped.
+        /// </summary>
+        protected virtual void _OnStopped()
+        {
+            AudioPlayer._PlaySound(ClipHit, transform.position, SoundRange);
         }
     }
 }
