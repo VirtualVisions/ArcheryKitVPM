@@ -70,6 +70,7 @@ namespace Vowgan.ArcheryKit
         /// </summary>
         public void _Return(ArrowProp arrow)
         {
+            if (!activeArrows.Contains(arrow)) return;
             activeArrows.Remove(arrow);
             freeArrows.Add(arrow);
         }
