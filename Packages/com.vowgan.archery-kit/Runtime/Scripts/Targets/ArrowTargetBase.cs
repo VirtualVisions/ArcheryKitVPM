@@ -61,7 +61,7 @@ namespace Vowgan.ArcheryKit
             for (int i = 0; i < currentArrows.Count; i++)
             {
                 ArrowProp arrow = (ArrowProp)currentArrows[i].Reference;
-                if (localPlayer.IsOwner(arrow.gameObject))
+                if (Networking.LocalPlayer.IsOwner(arrow.gameObject))
                 {
                     arrow._Clear();
                 }

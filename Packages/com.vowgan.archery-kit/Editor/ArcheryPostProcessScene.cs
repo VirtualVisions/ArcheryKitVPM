@@ -1,16 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
+using UdonSharpEditor;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEngine;
 using Vowgan.Contact;
+using VRC.Udon;
 
 namespace Vowgan.ArcheryKit
 {
     public class ArcheryPostProcessScene : MonoBehaviour
     {
-        
-        [PostProcessScene(-100)]
+        // Run one step before Contact's PPS does
+        [PostProcessScene(-101)]
         public static void PostProcessScene()
         {
             ArrowPool[] pools = FindObjectsByType<ArrowPool>(FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -31,18 +32,31 @@ namespace Vowgan.ArcheryKit
             }
             
             ContactAudioPlayer audioPlayer = FindObjectOfType<ContactAudioPlayer>();
-            if (audioPlayer)
+            if (!audioPlayer)
             {
-                ArrowTargetBase[] targetBases = FindObjectsByType<ArrowTargetBase>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-                foreach (ArrowTargetBase target in targetBases) target.AudioPlayer = audioPlayer;
-                
-                ArrowProp[] arrowProps = FindObjectsByType<ArrowProp>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-                foreach (ArrowProp arrow in arrowProps) arrow.AudioPlayer = audioPlayer;
+                // If there's no audio player, but we need one...
+                if (pools.Length != 0)
+                {
+                    GameObject contactObj = new GameObject("Contact Audio Player");
+                    audioPlayer = contactObj.AddUdonSharpComponent<ContactAudioPlayer>();
 
-                TimeTrial timeTrial = FindObjectOfType<TimeTrial>();
-                if (timeTrial) timeTrial.AudioPlayer = audioPlayer;
+                    if (EditorApplication.isPlaying)
+                    {
+                        UdonBehaviour udonProxy = UdonSharpEditorUtility.GetBackingUdonBehaviour(audioPlayer);
+                        UdonManager.Instance.RegisterUdonBehaviour(udonProxy);
+                    }
+                }
             }
 
+            ArrowTargetBase[] targetBases = FindObjectsByType<ArrowTargetBase>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (ArrowTargetBase target in targetBases) target.AudioPlayer = audioPlayer;
+            
+            ArrowProp[] arrowProps = FindObjectsByType<ArrowProp>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (ArrowProp arrow in arrowProps) arrow.AudioPlayer = audioPlayer;
+
+            TimeTrial[] timeTrials = FindObjectsByType<TimeTrial>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (TimeTrial trial in timeTrials) trial.AudioPlayer = audioPlayer;
+            
         }
         
     }
